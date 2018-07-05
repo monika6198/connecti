@@ -1,31 +1,112 @@
-<main>
-	<div>GROUP LINKS</div>
+<main id="posts-home">
+
 	<div>
-		
-		<% if user_signed_in? %>
+		<p class="headings">GROUP LINKS</p>
+	</div>
+
+	<div class="deewar-posts">
+		<div class="new-post-form">
+			<% if user_signed_in? %>
 			<%= form_for @post do |f| %>
-		
-			<%= f.label :content %>
-			<%= f.text_area :content %>
+				<%= f.label :content %>&nbsp&nbsp&nbsp&nbsp&nbsp:&nbsp
+				<%= f.text_field :content %>
 
-			<%= f.submit %>
-		
+				<%= f.submit %>
 			<% end %>
-		<% end %>
+			<% end %>
+		</div>
 
-		<div>
-			<ul>
-				<% @posts.reverse.each do |post|%>
-				<p><%= post.content %></p>
-				<p><%= post.user.email %></p> 
-					<% if user_signed_in? && post.user_id == current_user.id %>
-				
-						<p><%= link_to 'Delete', destroy_post_path(post), method: :delete %></p>
-				
-					<% end %>
+		<div >
+			<ul class="posts-list">
+				<% @posts.reverse.each do |post| %>
+				<li>
+					<div>
+
+						<p><%= post.content %></p>
+						<p><%= post.user.email %></p>
+						<% if user_signed_in? && post.user_id ==  current_user.id %>
+						<p><%= link_to "Delete", destroy_post_path(post.id), method: :delete %></p>
+						<% end %>
+
+						<% if user_signed_in? %>
+						<p>
+							<sub>
+								<%= post.likes.length %>
+								&nbsp
+								<%= link_to post.like_status_string(current_user.id), toggle_like_path(post.id), method: :post %>
+							</sub>
+						</p>
+						<% else %>
+						<sub>
+								<%= post.likes.length %> Likes
+						
+							</sub>
+
+						<% end %>
+
+						<div>
+							<h5>Add Comment</h5>
+							<% if user_signed_in? %>
+							<%= form_for @comment do |f| %>
+								<%= f.hidden_field :post_id, value: post.id %>
+
+								<%= f.label :content %>&nbsp&nbsp&nbsp&nbsp&nbsp:&nbsp
+								<%= f.text_field :content %>
+
+								<%= f.submit %>
+							<% end %>
+							<% end %>
+
+							<ul>
+								<% post.comments.reverse.each do |comment| %>
+								<li>
+									<p><%= comment.content %>
+										<sub><%= comment.user.email %></sub>
+									</p>
+									<% if user_signed_in? && comment.user_id ==  current_user.id %>
+										<p><%= link_to "Delete", destroy_comment_path(comment.id), method: :delete %></p>
+										<% end %>
+
+								</li>
+
+								<% end %>
+							</ul>
+
+
+						</div>
+					</div>
+				</li>
+
 				<% end %>
 			</ul>
+
+
 		</div>
+		
+
 	</div>
-	<div>FRIENDS</div>
+
+
+	<div>
+		<p class="headings">FRIENDS</p>
+	</div>
+
 </main>
+<footer>
+	<div>
+		<p><h4>ABOUT US</h4></p>
+		<p>MONIKA VAID</p>
+		<p>STUDENT</p>
+		<p>DELHI TECHNOLOGICAL UNIVERSITY</p>
+
+	</div>
+	<div>
+		<p><h4>CONTACT US</h4></p>
+		<p>34/22 METRO COMPLEX, SECTOR-5,</p>
+		<p>RAJENDER NAGAR, SAHIBABAD</p>
+		<p>GHAZIABAD, UTTAR PRADESH</p>
+		<p>PIN : 201005</p>
+		<p>PHONE NO. : 8920339400</p>
+	</div>
+</footer>
+
